@@ -6,36 +6,51 @@ import ca.yorku.cmg.lob.stockexchange.StockExchange;
 import ca.yorku.cmg.lob.stockexchange.events.BadNews;
 import ca.yorku.cmg.lob.stockexchange.events.Event;
 import ca.yorku.cmg.lob.stockexchange.events.GoodNews;
-import ca.yorku.cmg.lob.stockexchange.events.NewsBoard;
 import ca.yorku.cmg.lob.trader.Trader;
 import ca.yorku.cmg.lob.tradestandards.IOrder;
 
 /**
- * A trading agent kind that reacts more eagerly to news.
+ * An aggressive trading strategy: reacts eagerly to news with large order quantities.
+ * <ul>
+ *   <li>GoodNews: bids 50% of position at 5% above current price.</li>
+ *   <li>BadNews:  asks 80% of position at 10% below current price.</li>
+ * </ul>
  */
-public class TradingAgentAggressive extends TradingAgent {
+public class TradingAgentAggressive implements ITradingStrategy {
 
-	public TradingAgentAggressive(Trader t, StockExchange e, NewsBoard n) {
-		super(t, e, n);
+	private Trader trader;
+	private StockExchange exchange;
+
+	/**
+	 * Constructor — strategy needs trader and exchange to submit orders.
+	 * @param t The trader on whose behalf orders are submitted.
+	 * @param e The exchange to which orders are submitted.
+	 */
+	public TradingAgentAggressive(Trader t, StockExchange e) {
+		this.trader = t;
+		this.exchange = e;
 	}
 
 	@Override
-	protected void actOnEvent(Event e, int pos, int price) {
-
+	public void actOnEvent(Event e, int pos, int price) {
 		IOrder newOrder = null;
-		
+
 		if (e instanceof GoodNews) {
-            newOrder = new Bid(t,e.getSecrity(),(int) Math.round(price*1.05), (int) Math.round(pos*0.5),e.getTime());
-        } else if (e instanceof BadNews) {
-        	newOrder = new Ask(t,e.getSecrity(),(int) Math.round(price*0.90), (int) Math.round(pos*0.8),e.getTime());
-        } else {
-            System.out.println("Unknown event type");
-        }
-		
-		if (newOrder!=null) {
-			exc.submitOrder(newOrder,e.getTime());
+			newOrder = new Bid(trader, e.getSecrity(),
+					(int) Math.round(price * 1.05),
+					(int) Math.round(pos * 0.5),
+					e.getTime());
+		} else if (e instanceof BadNews) {
+			newOrder = new Ask(trader, e.getSecrity(),
+					(int) Math.round(price * 0.90),
+					(int) Math.round(pos * 0.8),
+					e.getTime());
+		} else {
+			System.out.println("AggressiveStrategy: Unknown event type");
 		}
-    }
 
-
+		if (newOrder != null) {
+			exchange.submitOrder(newOrder, e.getTime());
+		}
+	}
 }

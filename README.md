@@ -16,7 +16,7 @@ In the current design, a file with all the events of the next 30 days is read. A
 - Work on the code copy and, once you are done, commit to the **a2-strategy** branch -- though you can keep committing throughout development.
 - Subsequently, create a branch for the first part called **a2-observer** **and switch to it**.
 - Work on the code copy and, once you are done, commit to the **a2-observer** branch -- though you can keep committing throughout development.
-- Once you have committed your code, push to the github repository.
-- On eClass, submit a link to your forked repository.
+- Once you have committed your code, push to your github repository (the one you forked and have been working on all along).
+- On eClass, submit a link to your github repository, in **both** text boxes where it is asked.
 
 Please post any questions or issues on the "General News and Discussions Forum" on eClass.
