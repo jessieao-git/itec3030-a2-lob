@@ -16,6 +16,7 @@ import ca.yorku.cmg.lob.tradestandards.IOrder;
  *   <li>BadNews:  asks 80% of position at 10% below current price.</li>
  * </ul>
  */
+//
 public class TradingAgentAggressive implements ITradingStrategy {
 
 	private Trader trader;
